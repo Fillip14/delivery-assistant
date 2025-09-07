@@ -1,22 +1,10 @@
-import { View, Text, StyleSheet } from 'react-native';
-
-export const options = {
-  drawerLabel: 'Configurações',
-  title: 'Configurações',
-};
+import { Text, View } from 'react-native';
+import { general } from '../../styles/global.style';
 
 export default function Tab() {
   return (
-    <View style={styles.container}>
+    <View style={general.container}>
       <Text>Tab [Home|Settings]</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
