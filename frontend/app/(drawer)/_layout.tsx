@@ -15,15 +15,15 @@ export default function Layout() {
         <Drawer.Screen
           name="settings"
           options={{
-            drawerLabel: 'Configurções',
+            drawerLabel: 'Configurações',
             title: 'Configurações',
           }}
         />
         <Drawer.Screen
-          name="upload-excel"
+          name="manageExcel"
           options={{
-            drawerLabel: 'Upload Excel',
-            title: 'Upload Excel',
+            drawerLabel: 'Excel',
+            title: 'Excel',
           }}
         />
       </Drawer>
