@@ -37,6 +37,10 @@ export default function ExcelScreen() {
 
     return Object.values(merged).map((item) => ({
       ...item,
+      ['Destination Address']: item['Destination Address']
+        .replace('Rua', 'R')
+        .replace('Rodovia', 'Rod')
+        .trim(),
       Sequence: item.Sequence.join(','),
       Bairro: item.Bairro.toUpperCase().trim(),
     }));
