@@ -1,11 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 
-export const options = {
-  drawerLabel: 'Home',
-  title: 'Home',
-};
-
-export default function Tab() {
+export default function Index() {
   return (
     <View style={styles.container}>
       <Text>Tab [Home|Settings]</Text>
