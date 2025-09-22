@@ -6,7 +6,7 @@ import ExcelScreen from '../features/excel';
 
 const Drawer = createDrawerNavigator();
 
-export default function MainDrawer() {
+const MainDrawer = () => {
   return (
     <Drawer.Navigator>
       <Drawer.Screen
@@ -33,4 +33,6 @@ export default function MainDrawer() {
       />
     </Drawer.Navigator>
   );
-}
+};
+
+export default MainDrawer;

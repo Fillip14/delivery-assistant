@@ -1,7 +1,7 @@
 import * as Updates from 'expo-updates';
 import { Alert } from 'react-native';
 
-export async function checkUpdate() {
+const checkUpdate = async () => {
   try {
     const update = await Updates.checkForUpdateAsync();
     if (update.isAvailable) {
@@ -13,4 +13,6 @@ export async function checkUpdate() {
     console.log('Erro ao buscar update:', e);
     Alert.alert('Erro ao buscar update', e.message || 'Erro desconhecido');
   }
-}
+};
+
+export default checkUpdate;

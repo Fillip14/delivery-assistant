@@ -1,9 +1,9 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { RegisterTravels, ShowTravels, weekDetailsScreen } from '../features/travels';
+import { RegisterTravels, ShowTravels, WeekDetailsScreen } from '../features/travels';
 
 const Stack = createNativeStackNavigator();
 
-export default function TravelsStack() {
+const TravelsStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -18,9 +18,11 @@ export default function TravelsStack() {
       />
       <Stack.Screen
         name="DetalhesSemana"
-        component={weekDetailsScreen}
+        component={WeekDetailsScreen}
         options={{ title: 'Detalhes da Semana' }}
       />
     </Stack.Navigator>
   );
-}
+};
+
+export default TravelsStack;

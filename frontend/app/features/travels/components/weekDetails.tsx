@@ -10,7 +10,7 @@ type RouteParams = {
   };
 };
 
-export default function WeekDetails() {
+const WeekDetails = () => {
   const route = useRoute<RouteProp<RouteParams, 'DetalhesSemana'>>();
   const { weekStart, travels } = route.params;
 
@@ -26,7 +26,7 @@ export default function WeekDetails() {
       ))}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: { padding: 20, flex: 1 },
@@ -39,3 +39,5 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
 });
+
+export default WeekDetails;

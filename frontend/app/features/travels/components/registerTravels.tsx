@@ -11,7 +11,7 @@ type RegistroStackParamList = {
 
 type NavigationProps = NativeStackNavigationProp<RegistroStackParamList, 'RegistrarViagens'>;
 
-export default function RegisterTravels() {
+const RegisterTravels = () => {
   const navigation = useNavigation<NavigationProps>();
   const [travel1Start, setTravel1Start] = useState('');
   const [travel1End, setTravel1End] = useState('');
@@ -101,7 +101,7 @@ export default function RegisterTravels() {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: { padding: 20, flex: 1 },
@@ -109,3 +109,5 @@ const styles = StyleSheet.create({
   kmRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 15 },
   input: { flex: 0.45, borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 10 },
 });
+
+export default RegisterTravels;

@@ -15,6 +15,8 @@ type WeekGroup = {
   travels: DataWithSpent[];
 };
 
+type NavigationProps = NativeStackNavigationProp<RegistroStackParamList, 'ExibirViagens'>;
+
 function getWeekStart(dateString: string): string {
   const [year, month, day] = dateString.split('-').map(Number);
   const date = new Date(year, month - 1, day); // 🔹 agora pega no fuso local, sem UTC
@@ -38,9 +40,7 @@ function groupByWeek(data: DataWithSpent[]) {
   return grouped;
 }
 
-type NavigationProps = NativeStackNavigationProp<RegistroStackParamList, 'ExibirViagens'>;
-
-export default function ShowTravelsWeek() {
+const ShowTravelsWeek = () => {
   const [weeks, setWeeks] = useState<WeekGroup[]>([]);
   const navigation = useNavigation<NavigationProps>();
 
@@ -80,7 +80,7 @@ export default function ShowTravelsWeek() {
       )}
     />
   );
-}
+};
 
 const styles = StyleSheet.create({
   card: {
@@ -95,3 +95,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+export default ShowTravelsWeek;

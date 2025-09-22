@@ -1,9 +1,9 @@
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import MainDrawer from './navigation/mainDrawer';
-import { checkUpdate } from '../scripts/updateCheck';
 import { useEffect } from 'react';
+import MainDrawer from './navigation/mainDrawer';
+import checkUpdate from '../utils/updateCheck';
 
-export default function App() {
+const App = () => {
   useEffect(() => {
     checkUpdate();
   }, []);
@@ -13,4 +13,6 @@ export default function App() {
       <MainDrawer />
     </GestureHandlerRootView>
   );
-}
+};
+
+export default App;
