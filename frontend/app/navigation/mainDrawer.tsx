@@ -3,6 +3,7 @@ import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import Index from '../features/home';
 import TravelsStack from './travelsStack';
 import ExcelScreen from '../features/excel';
+import Configurations from '../features/configurations';
 
 const Drawer = createDrawerNavigator();
 
@@ -30,6 +31,11 @@ const MainDrawer = () => {
         name="excel"
         component={ExcelScreen}
         options={{ drawerLabel: 'Excel', title: 'Excel' }}
+      />
+      <Drawer.Screen
+        name="Configurações"
+        component={Configurations}
+        options={{ drawerLabel: 'Configurações', title: 'Configurações' }}
       />
     </Drawer.Navigator>
   );
