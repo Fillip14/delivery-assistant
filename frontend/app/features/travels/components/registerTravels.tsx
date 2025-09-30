@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, Button, StyleSheet, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { saveKmData, loadKmData, clearAllKmData, TravelData } from '../services/kmStorage';
+import { loadKmData, clearAllKmData } from '../services/kmStorage';
+import { kmManager } from '../utils/saveTravel/saveKmManager';
 
 type RegistroStackParamList = {
   RegisterTravels: undefined;
@@ -18,10 +19,9 @@ const RegisterTravels = () => {
   const [travel2Start, setTravel2Start] = useState('');
   const [travel2End, setTravel2End] = useState('');
 
-  // const today = new Date().toISOString().slice(0, 10);
-  const today = '2025-09-07';
+  const today = new Date().toISOString().slice(0, 10);
 
-  const loadTodayData = async () => {
+  const loadTodayData = useCallback(async () => {
     const data = await loadKmData(today);
     if (data) {
       setTravel1Start(data.travel1Start.toString());
@@ -29,21 +29,14 @@ const RegisterTravels = () => {
       setTravel2Start(data.travel2Start.toString());
       setTravel2End(data.travel2End.toString());
     }
-  };
+  }, [today]);
 
   useEffect(() => {
     loadTodayData();
-  }, [today]);
+  }, [loadTodayData]);
 
   const handleSave = async () => {
-    const data: TravelData = {
-      date: today,
-      travel1Start: Number(travel1Start),
-      travel1End: Number(travel1End),
-      travel2Start: Number(travel2Start),
-      travel2End: Number(travel2End),
-    };
-    await saveKmData(data);
+    await kmManager(today, travel1Start, travel1End, travel2Start, travel2End);
     alert('Dados salvos!');
   };
 

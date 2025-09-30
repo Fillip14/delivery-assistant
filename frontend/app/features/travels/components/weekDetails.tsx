@@ -1,38 +1,40 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
-import { DataWithSpent } from '../services/kmStorage';
+import { TravelData } from '../services/kmStorage';
 
 type RouteParams = {
   weekDetails: {
-    weekStart: string;
-    travels: DataWithSpent[];
+    travels: TravelData[];
   };
 };
 
 const WeekDetails = () => {
   const route = useRoute<RouteProp<RouteParams, 'weekDetails'>>();
-  const { weekStart, travels } = route.params;
+  const { travels } = route.params;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Semana de {weekStart}</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>
+        Semana de {travels[0].firstDay} - {travels[0].lastDay}
+      </Text>
       {travels.map((t, i) => (
         <View key={i} style={styles.item}>
           <Text>Data: {t.date}</Text>
-          <Text>KM1 Gasto: {t.travel1Spent}</Text>
-          <Text>KM2 Gasto: {t.travel2Spent}</Text>
+          <Text>KM1 Gasto: {t.travel1Spent} km</Text>
+          <Text>KM2 Gasto: {t.travel2Spent} km</Text>
+          <Text>Total: {t.totalSpent} km</Text>
         </View>
       ))}
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { padding: 20, flex: 1 },
+  container: { padding: 20 },
   title: { fontWeight: 'bold', fontSize: 18, marginBottom: 10 },
   item: {
-    marginBottom: 10,
+    marginTop: 10,
     padding: 10,
     borderWidth: 1,
     borderColor: '#ddd',

@@ -1,44 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
-import { DataWithSpent, getAllKmData } from '../services/kmStorage';
+import { getAllKmData, TravelData } from '../services/kmStorage';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type RegistroStackParamList = {
   RegisterTravels: undefined;
   weeklyReports: undefined;
-  weekDetails: { weekStart: string; travels: DataWithSpent[] };
-};
-
-type WeekGroup = {
-  weekStart: string;
-  travels: DataWithSpent[];
+  weekDetails: {
+    travels: TravelData[];
+  };
 };
 
 type NavigationProps = NativeStackNavigationProp<RegistroStackParamList, 'weeklyReports'>;
 
-function getWeekStart(dateString: string): string {
-  const [year, month, day] = dateString.split('-').map(Number);
-  const date = new Date(year, month - 1, day); // 🔹 agora pega no fuso local, sem UTC
+type WeekGroup = {
+  firstDay: string;
+  travels: TravelData[];
+  weekTotal: number;
+};
 
-  const dayOfWeek = date.getDay(); // 0=domingo, 1=segunda
+const groupByWeek = (data: TravelData[]): Record<string, TravelData[]> => {
+  const grouped: Record<string, TravelData[]> = {};
 
-  const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-
-  const weekStart = new Date(date);
-  weekStart.setDate(date.getDate() + diff);
-  return weekStart.toISOString().slice(0, 10);
-}
-
-function groupByWeek(data: DataWithSpent[]) {
-  const grouped: Record<string, DataWithSpent[]> = {};
   data.forEach((item) => {
-    const weekStart = getWeekStart(item.date);
-    if (!grouped[weekStart]) grouped[weekStart] = [];
-    grouped[weekStart].push(item);
+    const key = item.firstDay; // chave por semana
+
+    if (!grouped[key]) {
+      grouped[key] = [];
+    }
+
+    grouped[key].push(item);
   });
+
   return grouped;
-}
+};
 
 const ShowTravelsWeek = () => {
   const [weeks, setWeeks] = useState<WeekGroup[]>([]);
@@ -49,9 +45,10 @@ const ShowTravelsWeek = () => {
       const all = await getAllKmData();
       const grouped = groupByWeek(all);
 
-      const formatted: WeekGroup[] = Object.keys(grouped).map((weekStart) => ({
-        weekStart,
-        travels: grouped[weekStart],
+      const formatted: WeekGroup[] = Object.keys(grouped).map((firstDay) => ({
+        firstDay,
+        travels: grouped[firstDay],
+        weekTotal: grouped[firstDay].reduce((acc, t) => acc + t.totalSpent, 0),
       }));
 
       setWeeks(formatted);
@@ -63,19 +60,22 @@ const ShowTravelsWeek = () => {
   return (
     <FlatList
       data={weeks}
-      keyExtractor={(item) => item.weekStart}
       renderItem={({ item }) => (
         <TouchableOpacity
           style={styles.card}
           onPress={() =>
             navigation.navigate('weekDetails', {
-              weekStart: item.weekStart,
               travels: item.travels,
             })
           }
         >
-          <Text style={styles.title}>Semana começando: {item.weekStart}</Text>
+          {item.travels.length > 0 && (
+            <Text style={styles.title}>
+              Semana: {item.travels[0].firstDay} - {item.travels[0].lastDay}
+            </Text>
+          )}
           <Text>Total de viagens: {item.travels.length}</Text>
+          <Text>Total de km gasto: {item.weekTotal} km</Text>
         </TouchableOpacity>
       )}
     />
@@ -84,7 +84,7 @@ const ShowTravelsWeek = () => {
 
 const styles = StyleSheet.create({
   card: {
-    marginBottom: 15,
+    marginTop: 15,
     padding: 15,
     borderWidth: 1,
     borderColor: '#aaa',

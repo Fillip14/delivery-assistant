@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getWeekRangeFromDate } from '../utils/saveTravel/processKms';
 
 export type TravelData = {
   date: string;
@@ -6,49 +7,72 @@ export type TravelData = {
   travel1End: number;
   travel2Start: number;
   travel2End: number;
-};
-
-export type DataWithSpent = TravelData & {
   travel1Spent: number;
   travel2Spent: number;
+  totalSpent: number;
+  firstDay: string;
+  lastDay: string;
 };
 
 export const loadKmData = async (date: string): Promise<TravelData | null> => {
-  const loadedData = await AsyncStorage.getItem(`km_${date}`);
+  const { firstDay } = getWeekRangeFromDate(date);
+  const loadedData = await AsyncStorage.getItem(`travelsDay_${firstDay}`);
   if (!loadedData) return null;
-  return JSON.parse(loadedData);
+
+  const datasOfWeek: TravelData[] = JSON.parse(loadedData);
+  const found = datasOfWeek.find((t) => t.date === date);
+
+  return found ?? null;
 };
 
 export const saveKmData = async (data: TravelData) => {
-  await AsyncStorage.setItem(`km_${data.date}`, JSON.stringify(data));
+  const key = `travelsDay_${data.firstDay}`;
+  const loadedData = await AsyncStorage.getItem(key);
+
+  let datasOfWeek: TravelData[] = loadedData ? JSON.parse(loadedData) : [];
+  const index = datasOfWeek.findIndex((t) => t.date === data.date);
+
+  if (index >= 0) {
+    datasOfWeek[index] = data;
+  } else {
+    datasOfWeek.push(data);
+  }
+
+  await AsyncStorage.setItem(key, JSON.stringify(datasOfWeek));
 };
 
-export const getAllKmData = async (): Promise<DataWithSpent[]> => {
+export const getAllKmData = async (): Promise<TravelData[]> => {
   const keys = await AsyncStorage.getAllKeys();
-  const kmKeys = keys.filter((k) => k.startsWith('km_'));
+  const kmKeys = keys.filter((k) => k.startsWith('travelsDay_'));
   const stores = await AsyncStorage.multiGet(kmKeys);
 
-  return stores.map(([key, value]) => {
-    const parsed = JSON.parse(value || '{}');
-    const travel1Start = Number(parsed.travel1Start) || 0;
-    const travel1End = Number(parsed.travel1End) || 0;
-    const travel2Start = Number(parsed.travel2Start) || 0;
-    const travel2End = Number(parsed.travel2End) || 0;
+  const allData: TravelData[] = [];
 
-    return {
-      date: key.replace('km_', ''),
-      travel1Start,
-      travel1End,
-      travel2Start,
-      travel2End,
-      travel1Spent: travel1End - travel1Start,
-      travel2Spent: travel2End - travel2Start,
-    };
+  stores.forEach(([key, value]) => {
+    if (!value) return;
+    const datasOfWeek: TravelData[] = JSON.parse(value); // aqui é array
+
+    datasOfWeek.forEach((parsed) => {
+      allData.push({
+        date: parsed.date,
+        travel1Start: Number(parsed.travel1Start) || 0,
+        travel1End: Number(parsed.travel1End) || 0,
+        travel2Start: Number(parsed.travel2Start) || 0,
+        travel2End: Number(parsed.travel2End) || 0,
+        travel1Spent: Number(parsed.travel1Spent) || 0,
+        travel2Spent: Number(parsed.travel2Spent) || 0,
+        totalSpent: Number(parsed.totalSpent) || 0,
+        firstDay: parsed.firstDay,
+        lastDay: parsed.lastDay,
+      });
+    });
   });
+
+  return allData;
 };
 
 export const clearAllKmData = async () => {
   const keys = await AsyncStorage.getAllKeys();
-  const kmKeys = keys.filter((k) => k.startsWith('km_'));
+  const kmKeys = keys.filter((k) => k.startsWith('travelsDay_'));
   await AsyncStorage.multiRemove(kmKeys);
 };
