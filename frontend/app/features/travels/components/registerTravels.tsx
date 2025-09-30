@@ -5,11 +5,11 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { saveKmData, loadKmData, clearAllKmData, TravelData } from '../services/kmStorage';
 
 type RegistroStackParamList = {
-  RegistrarViagens: undefined;
-  ExibirViagens: undefined;
+  RegisterTravels: undefined;
+  weeklyReports: undefined;
 };
 
-type NavigationProps = NativeStackNavigationProp<RegistroStackParamList, 'RegistrarViagens'>;
+type NavigationProps = NativeStackNavigationProp<RegistroStackParamList, 'RegisterTravels'>;
 
 const RegisterTravels = () => {
   const navigation = useNavigation<NavigationProps>();
@@ -93,7 +93,7 @@ const RegisterTravels = () => {
         <View style={{ height: 10 }} />
         <Button
           title="Mostrar todos os dados"
-          onPress={() => navigation.navigate('ExibirViagens')}
+          onPress={() => navigation.navigate('weeklyReports')}
         />
         <View style={{ height: 10 }} />
         <Button title="Limpar todos os dados" onPress={handleClear} color="red" />

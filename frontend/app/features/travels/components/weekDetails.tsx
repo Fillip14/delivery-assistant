@@ -4,14 +4,14 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import { DataWithSpent } from '../services/kmStorage';
 
 type RouteParams = {
-  DetalhesSemana: {
+  weekDetails: {
     weekStart: string;
     travels: DataWithSpent[];
   };
 };
 
 const WeekDetails = () => {
-  const route = useRoute<RouteProp<RouteParams, 'DetalhesSemana'>>();
+  const route = useRoute<RouteProp<RouteParams, 'weekDetails'>>();
   const { weekStart, travels } = route.params;
 
   return (

@@ -5,9 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type RegistroStackParamList = {
-  RegistrarViagens: undefined;
-  ExibirViagens: undefined;
-  DetalhesSemana: { weekStart: string; travels: DataWithSpent[] };
+  RegisterTravels: undefined;
+  weeklyReports: undefined;
+  weekDetails: { weekStart: string; travels: DataWithSpent[] };
 };
 
 type WeekGroup = {
@@ -15,7 +15,7 @@ type WeekGroup = {
   travels: DataWithSpent[];
 };
 
-type NavigationProps = NativeStackNavigationProp<RegistroStackParamList, 'ExibirViagens'>;
+type NavigationProps = NativeStackNavigationProp<RegistroStackParamList, 'weeklyReports'>;
 
 function getWeekStart(dateString: string): string {
   const [year, month, day] = dateString.split('-').map(Number);
@@ -68,7 +68,7 @@ const ShowTravelsWeek = () => {
         <TouchableOpacity
           style={styles.card}
           onPress={() =>
-            navigation.navigate('DetalhesSemana', {
+            navigation.navigate('weekDetails', {
               weekStart: item.weekStart,
               travels: item.travels,
             })

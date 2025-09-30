@@ -19,11 +19,11 @@ const MainDrawer = () => {
         name="travels"
         component={TravelsStack}
         options={({ route }) => {
-          const routeName = getFocusedRouteNameFromRoute(route) ?? 'RegistrarViagens';
+          const routeName = getFocusedRouteNameFromRoute(route) ?? 'RegisterTravels';
           return {
             drawerLabel: 'Km Rodados',
             title: 'Km Rodados',
-            headerShown: routeName !== 'ExibirViagens' && routeName !== 'DetalhesSemana', // Esconde header só na tela Exibir
+            headerShown: routeName !== 'weeklyReports' && routeName !== 'weekDetails', // Esconde header só na tela Exibir
           };
         }}
       />
